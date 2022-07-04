@@ -1,15 +1,11 @@
+using Lesson1_BL;
+using Lesson1_DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lesson1
 {
@@ -25,6 +21,15 @@ namespace Lesson1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IBooksRepository, BooksRepository>();
+            services.AddScoped<IBooksService, BooksService>();
+            //services.AddScoped<IClientsRepository, ClientsRepository>();
+            //services.AddScoped<IClientsService, ClientsService>();
+            //services.AddScoped<ILocationsRepository, LocationsRepository>();
+
+            services.AddDbContext<EFCoreDbContext>(options =>
+               options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
+
             services.AddControllers();
         }
 
