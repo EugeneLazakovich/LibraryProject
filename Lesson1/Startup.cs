@@ -23,9 +23,9 @@ namespace Lesson1
         {
             services.AddScoped<IBooksRepository, BooksRepository>();
             services.AddScoped<IBooksService, BooksService>();
-            //services.AddScoped<IClientsRepository, ClientsRepository>();
-            //services.AddScoped<IClientsService, ClientsService>();
-            //services.AddScoped<ILocationsRepository, LocationsRepository>();
+            services.AddScoped<IClientsRepository, ClientsRepository>();
+            services.AddScoped<IClientsService, ClientsService>();
+            services.AddScoped<ILocationsRepository, LocationsRepository>();
 
             services.AddDbContext<EFCoreDbContext>(options =>
                options.UseSqlServer(Configuration["ConnectionStrings:Default"]));

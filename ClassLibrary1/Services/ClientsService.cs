@@ -37,27 +37,23 @@ namespace Lesson1_BL
         public bool RentABook(Guid bookId, Guid clientId)
         {
             var book = _booksRepository.GetById(bookId);
-            if (book == null)
-            {
-                throw new ArgumentException("The book doesn't exist!");
-            }
-
             var client = _clientsRepository.GetById(clientId);
-            if (client == null)
-            {
-                throw new ArgumentException("The client doesn't exist!");
-            }
+            CheckEmptiesOnNull(book, client);
 
             if (book.IsRent == true)
             {
                 throw new ArgumentException("The book has been already rented!");
             }
-            if (client.Books.Contains(book))
+            if (client.Books != null)
             {
-                throw new ArgumentException("The client has this book!");
+                if (client.Books.Contains(book))
+                {
+                    throw new ArgumentException("The client has this book!");
+                }                
             }
             book.IsRent = true;
             book.RentCount++;
+            book.Client = client;
             _booksRepository.Update(book);
 
             client.Books.Add(book);
@@ -69,26 +65,22 @@ namespace Lesson1_BL
         public bool ReturnABook(Guid bookId, Guid clientId)
         {
             var book = _booksRepository.GetById(bookId);
-            if (book == null)
-            {
-                throw new ArgumentException("The book doesn't exist!");
-            }
-
             var client = _clientsRepository.GetById(clientId);
-            if (client == null)
-            {
-                throw new ArgumentException("The client doesn't exist!");
-            }
+            CheckEmptiesOnNull(book, client);
 
             if (book.IsRent == false)
             {
                 throw new ArgumentException("The book is in library!");
             }            
-            if (!client.Books.Contains(book))
+            if (client.Books == null)
             {
-                throw new ArgumentException("The client don't have this book!");
+                if (!client.Books.Contains(book))
+                {
+                    throw new ArgumentException("The client don't have this book!");
+                }                
             }
             book.IsRent = false;
+            book.Client = null;
             _booksRepository.Update(book);
 
             client.Books.Remove(book);
@@ -100,6 +92,19 @@ namespace Lesson1_BL
         public bool UpdateClient(Client client)
         {
             return _clientsRepository.Update(client);
+        }
+
+        private static void CheckEmptiesOnNull(Book book, Client client)
+        {
+            if (book == null)
+            {
+                throw new ArgumentException("The book doesn't exist!");
+            }
+
+            if (client == null)
+            {
+                throw new ArgumentException("The client doesn't exist!");
+            }
         }
     }
 }

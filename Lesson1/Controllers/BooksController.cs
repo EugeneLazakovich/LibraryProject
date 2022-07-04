@@ -21,7 +21,7 @@ namespace Lesson1.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Book> GetAllBooks()
+        public IEnumerable<Book> GetAll()
         {
             return _booksService.GetAllBooks();
         }
@@ -33,7 +33,7 @@ namespace Lesson1.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddBook(Book book)
+        public IActionResult Add(Book book)
         {
             try
             {

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Lesson1.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class ClientsController : ControllerBase
     {
         private readonly ILogger<ClientsController> _logger;
@@ -21,7 +23,7 @@ namespace Lesson1.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Client> GetAllBooks()
+        public IEnumerable<Client> GetAll()
         {
             return _clientsService.GetAllClients();
         }
@@ -33,7 +35,7 @@ namespace Lesson1.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddClient(Client client)
+        public IActionResult Add(Client client)
         {
             try
             {

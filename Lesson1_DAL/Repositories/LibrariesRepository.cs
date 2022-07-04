@@ -16,6 +16,7 @@ namespace Lesson1_DAL
         public Guid Add(Library library)
         {
             library.Id = Guid.NewGuid();
+            library.Books = new List<Book>();
             _dbContext.Add(library);
             _dbContext.SaveChanges();
 
