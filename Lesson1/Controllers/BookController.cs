@@ -40,6 +40,7 @@ namespace Lesson1.Controllers
         [HttpPost]
         public void Create(Book book)
         {
+            //creating a new guid for Id
             book.Id = Guid.NewGuid();
             Books.Add(book);
         }
