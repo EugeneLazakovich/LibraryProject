@@ -100,5 +100,20 @@ namespace Lesson1.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("deposit")]
+        public IActionResult Deposit(double amount, Guid clientId)
+        {
+            try
+            {
+                var result = _clientsService.Deposit(amount, clientId);
+
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -9,24 +9,15 @@ namespace Lesson1_DAL
         public DbSet<City> Cities { get; set; }
         public DbSet<Library> Libraries { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
 
         public EFCoreDbContext(DbContextOptions<EFCoreDbContext> options) : base(options)  
         {
             Database.EnsureCreated();
         }
 
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-0Q7NADI\\SQLEXPRESS;Initial Catalog=NetCoreDB;Integrated Security=True");
-        }*/
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            /*modelBuilder.Entity<Book>().ToTable("Book", "dbo");
-            modelBuilder.Entity<Client>().ToTable("Client", "dbo");
-            modelBuilder.Entity<City>().ToTable("City", "dbo");
-            modelBuilder.Entity<Library>().ToTable("Library", "dbo");
-            modelBuilder.Entity<Location>().ToTable("Location", "dbo");*/
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Location>(entity =>
@@ -34,6 +25,12 @@ namespace Lesson1_DAL
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.XCoordinate).IsRequired();
                 entity.Property(e => e.YCoordinate).IsRequired();
+            });
+
+            modelBuilder.Entity<Wallet>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Amount).IsRequired();
             });
 
             modelBuilder.Entity<Library>(entity =>

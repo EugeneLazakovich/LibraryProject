@@ -94,16 +94,35 @@ namespace Lesson1_BL
             return _clientsRepository.Update(client);
         }
 
+        public bool Deposit(double amount, Guid clientId)
+        {
+            var client = _clientsRepository.GetById(clientId);
+            CheckClientOnNull(client);
+            client.Amount += amount;
+            _clientsRepository.Update(client);
+
+            return true;
+        }
+
         private static void CheckEmptiesOnNull(Book book, Client client)
+        {
+            CheckBookOnNull(book);
+            CheckClientOnNull(client);
+        }
+
+        private static void CheckClientOnNull(Client client)
+        {
+            if (client == null)
+            {
+                throw new ArgumentException("The client doesn't exist!");
+            }
+        }
+
+        private static void CheckBookOnNull(Book book)
         {
             if (book == null)
             {
                 throw new ArgumentException("The book doesn't exist!");
-            }
-
-            if (client == null)
-            {
-                throw new ArgumentException("The client doesn't exist!");
             }
         }
     }

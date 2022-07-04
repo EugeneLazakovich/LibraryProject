@@ -14,5 +14,6 @@ namespace Lesson1_BL
         bool DeleteByIdClient(Guid id);
         bool UpdateClient(Client client);
         Guid AddClient(Client client);
+        bool Deposit(double amount, Guid clientId);
     }
 }
