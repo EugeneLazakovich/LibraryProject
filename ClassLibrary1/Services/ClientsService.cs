@@ -1,7 +1,6 @@
 ﻿using Lesson1_DAL;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Lesson1_BL
 {
@@ -92,8 +91,8 @@ namespace Lesson1_BL
             if(book != null)
             {
                 client.Books.Remove(book);
-            }            
-            client.IsBlocked = client.Amount < 0 ? true : false;
+            }
+            client.IsBlocked = client.Amount < 0;
             _clientsRepository.Update(client);
             if (result)
             {

@@ -1,8 +1,6 @@
 ﻿using Lesson1_DAL;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Lesson1_BL
 {
@@ -22,7 +20,7 @@ namespace Lesson1_BL
                 foreach(var client in clients)
                 {
                     client.Amount -= _defaultSettings.PricePerMonth;
-                    client.IsBlocked = client.Amount < 0 ? true : false;
+                    client.IsBlocked = client.Amount < 0;
                     _clientsRepository.Update(client);
                 }
             }
