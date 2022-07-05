@@ -11,5 +11,7 @@ namespace Lesson1_BL
         bool DeleteByIdBook(Guid id);
         bool UpdateBook(Book book);
         Guid AddBook(Book book);
+        IEnumerable<Book> GetBooksByCity(string cityName);
+        IEnumerable<Book> GetMostReadableBooks(int top);
     }
 }

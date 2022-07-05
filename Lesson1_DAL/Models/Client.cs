@@ -16,6 +16,7 @@ namespace Lesson1_DAL
         [MinLength(2)]
         [MaxLength(20)]
         public string LastName { get; set; }
+        public bool IsBlocked { get; set; }
         public List<Book> Books { get; set; }
         public double Amount { get; set; }
     }

@@ -1,12 +1,13 @@
 ﻿using Lesson1_DAL;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lesson1_BL
 {
     public class BooksService : IBooksService
     {
-        private readonly IBooksRepository _booksRepository;
+        private readonly IBooksRepository _booksRepository; 
         public BooksService(IBooksRepository booksRepository)
         {
             _booksRepository = booksRepository;
@@ -37,6 +38,16 @@ namespace Lesson1_BL
             ValidateBookState(book);
 
             return _booksRepository.Update(book);
+        }
+
+        public IEnumerable<Book> GetBooksByCity(string cityName)
+        {
+            return _booksRepository.GetAll().Where(book => book.Library != null && book.Library.City != null && book.Library.City.Name == cityName);
+        }
+
+        public IEnumerable<Book> GetMostReadableBooks(int top)
+        {
+            return _booksRepository.GetAll().OrderBy(c => c.RentCount).Take(top);
         }
 
         private static void ValidateBookState(Book book)

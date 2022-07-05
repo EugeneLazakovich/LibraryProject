@@ -16,7 +16,11 @@ namespace Lesson1_DAL
         public Guid Add(Book book)
         {
             book.Id = Guid.NewGuid();
-            book.IsRent = false;
+            book.Client = null;
+            book.DateOfRent = null;
+            book.DaysForRent = 0;
+            book.IsDamaged = false;
+            book.IsDelayed = false;
             book.RentCount = 0;
             _dbContext.Books.Add(book);
             _dbContext.SaveChanges();

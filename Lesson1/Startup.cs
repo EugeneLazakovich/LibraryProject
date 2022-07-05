@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading;
 
 namespace Lesson1
 {
@@ -25,6 +26,7 @@ namespace Lesson1
             services.AddScoped<IBooksService, BooksService>();
             services.AddScoped<IClientsRepository, ClientsRepository>();
             services.AddScoped<IClientsService, ClientsService>();
+            services.AddScoped<IBackgroundsService, BackgroundsService>();
             services.AddScoped<ILocationsRepository, LocationsRepository>();
 
             services.AddDbContext<EFCoreDbContext>(options =>
@@ -51,6 +53,7 @@ namespace Lesson1
             {
                 endpoints.MapControllers();
             });
+            
         }
     }
 }

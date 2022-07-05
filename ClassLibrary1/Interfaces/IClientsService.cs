@@ -8,7 +8,7 @@ namespace Lesson1_BL
     public interface IClientsService
     {
         bool RentABook(Guid bookId, Guid clientId);
-        bool ReturnABook(Guid bookId, Guid clientId);
+        bool ReturnABook(Guid bookId, Guid clientId, bool isLost, bool isDamaged);
         IEnumerable<Client> GetAllClients();
         Client GetByIdClient(Guid id);
         bool DeleteByIdClient(Guid id);

@@ -18,7 +18,10 @@ namespace Lesson1_DAL
         public int PagesCount { get; set; }
         public Library Library { get; set; }
         public Client Client { get; set; }
-        public bool IsRent { get; set; }
+        public DateTime? DateOfRent { get; set; }
+        public int DaysForRent { get; set; }
+        public bool IsDamaged { get; set; }
+        public bool IsDelayed { get; set; }
         public int RentCount { get; set; }
     }
 }

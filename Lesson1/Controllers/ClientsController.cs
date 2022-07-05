@@ -87,11 +87,11 @@ namespace Lesson1.Controllers
         }
 
         [HttpPut("return")]
-        public IActionResult ReturnABook(Guid bookId, Guid clientId)
+        public IActionResult ReturnABook(Guid bookId, Guid clientId, bool isLost, bool isDamaged, bool isDelayed)
         {
             try
             {
-                var result = _clientsService.ReturnABook(bookId, clientId);
+                var result = _clientsService.ReturnABook(bookId, clientId, isLost, isDamaged);
 
                 return Ok();
             }

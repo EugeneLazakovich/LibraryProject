@@ -17,6 +17,7 @@ namespace Lesson1_DAL
         public Guid Add(Client client)
         {
             client.Id = Guid.NewGuid();
+            client.IsBlocked = false;
             client.Books = new List<Book>();
             _dbContext.Clients.Add(client);
             _dbContext.SaveChanges();

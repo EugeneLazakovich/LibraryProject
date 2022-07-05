@@ -68,5 +68,17 @@ namespace Lesson1.Controllers
         {
             return _booksService.DeleteByIdBook(id);
         }
+
+        [HttpGet("getByCity")]
+        public IEnumerable<Book> GetByCity(string cityName)
+        {
+            return _booksService.GetBooksByCity(cityName);
+        }
+
+        [HttpGet("mostReadableBooks")]
+        public IEnumerable<Book> GetMostReadableBooks(int top)
+        {
+            return _booksService.GetMostReadableBooks(top);
+        }
     }
 }
