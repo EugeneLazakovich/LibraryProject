@@ -1,7 +1,7 @@
 ﻿using Lesson1_BL;
 using System.Threading;
 
-namespace Lesson1
+namespace Lesson1.Controllers
 {
     public class BackgroundController
     {

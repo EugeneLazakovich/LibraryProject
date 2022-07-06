@@ -6,6 +6,6 @@ namespace Lesson1_DAL
     public interface ILocationsRepository
     {
         IEnumerable<Location> GetAll();
-        Guid Add(Location location);
+        //Guid Add(Location location);
     }
 }

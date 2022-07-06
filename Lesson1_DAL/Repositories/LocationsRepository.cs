@@ -12,14 +12,14 @@ namespace Lesson1_DAL
             _dbContext = dbContext;
         }
 
-        public Guid Add(Location location)
+        /*public Guid Add(Location location)
         {
             location.Id = Guid.NewGuid();
             _dbContext.Add(location);
             _dbContext.SaveChanges();
 
             return location.Id;
-        }
+        }*/
 
         public IEnumerable<Location> GetAll()
         {
