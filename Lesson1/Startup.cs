@@ -35,6 +35,8 @@ namespace Lesson1
 
             services.AddDbContext<EFCoreDbContext>(options =>
                options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddControllers();
         }

@@ -30,6 +30,8 @@ namespace Lesson1_DAL
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired();
+                entity.HasOne(d => d.City)
+                  .WithMany(p => p.Libraries);
                 entity.HasOne(d => d.Location)
                   .WithOne(p => p.Library);
             });

@@ -1,7 +1,5 @@
 ﻿using Lesson1_DAL;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Lesson1_BL
 {
@@ -12,10 +10,10 @@ namespace Lesson1_BL
         {
             _locationsRepository = locationsRepository;
         }
-        public Guid AddLocation(Location location)
+        /*public Guid AddLocation(Location location)
         {
             return _locationsRepository.Add(location);
-        }
+        }*/
 
         public IEnumerable<Location> GetAllLocations()
         {

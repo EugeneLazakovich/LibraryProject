@@ -11,9 +11,7 @@ namespace Lesson1_DAL
         [MinLength(2)]
         [MaxLength(30)]
         public string Name { get; set; }
-        [Required]
         public City City { get; set; }
-        [Required]
         public Location Location { get; set; }
         public List<Book> Books { get; set; }
     }

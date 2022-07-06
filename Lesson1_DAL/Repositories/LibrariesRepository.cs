@@ -22,7 +22,17 @@ namespace Lesson1_DAL
             library.Location = location;
 
             library.City = GetNewCity();
-            GetNewCity().Libraries.Add(library);
+            if(library.City.Libraries == null)
+            {
+                library.City.Libraries = new List<Library>
+                {
+                    library
+                };
+            }
+            else
+            {
+                library.City.Libraries.Add(library);
+            }
 
 
             _dbContext.Add(library);
@@ -35,6 +45,7 @@ namespace Lesson1_DAL
         private static void GetRandomLocation(Location location)
         {
             Random random = new Random();
+            location.Id = Guid.NewGuid();
             location.XCoordinate = random.NextDouble() * (180 - (-179.99)) + (-179.99);
             location.YCoordinate = random.NextDouble() * (180 - (-179.99)) + (-179.99);
         }

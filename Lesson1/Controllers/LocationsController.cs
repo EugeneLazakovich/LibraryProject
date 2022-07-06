@@ -2,10 +2,7 @@
 using Lesson1_DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lesson1.Controllers
 {
@@ -28,7 +25,7 @@ namespace Lesson1.Controllers
             return _locationsService.GetAllLocations();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public IActionResult Add(Location location)
         {
             try
@@ -41,6 +38,6 @@ namespace Lesson1.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
+        }*/
     }
 }

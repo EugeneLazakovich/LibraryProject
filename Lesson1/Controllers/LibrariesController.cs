@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lesson1.Controllers
 {
@@ -44,9 +43,9 @@ namespace Lesson1.Controllers
         }
 
         [HttpGet("top")]
-        public IEnumerable<Library> GetNearestLibraries(Location location, int top)
+        public IEnumerable<string> GetNearestLibraries(Location location, int top)
         {
-            return _librariesService.GetNearestLibraries(location, top);
+            return _librariesService.GetNearestLibraries(location, top).Select(c => c.Name);
         }
     }
 }
