@@ -1,7 +1,9 @@
-﻿namespace Lesson1_BL
+﻿using System.Threading.Tasks;
+
+namespace Lesson1_BL
 {
     public interface IBackgroundsService
     {
-        void PayPerMonth();
+        Task<bool> PayPerMonth();
     }
 }

@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.26" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.26" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.26">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

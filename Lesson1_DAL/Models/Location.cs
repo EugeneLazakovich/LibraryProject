@@ -1,19 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Lesson1_DAL
+namespace Lesson1_DAL.Models
 {
-    public class Location
+    public class Location : BaseEntity
     {
-        [ForeignKey("Library")]
-        public Guid Id { get; set; }
         [Required]
-        [Range(-179.99, 180)]
-        public double XCoordinate { get; set; }
+        [Range(-180, 180)]
+        public float XCoordinate { get; set; }
         [Required]
-        [Range(-179.99, 180)]
-        public double YCoordinate { get; set; }
-        public Library Library { get; set; }
+        [Range(-90, 90)]
+        public float YCoordinate { get; set; }
     }
 }

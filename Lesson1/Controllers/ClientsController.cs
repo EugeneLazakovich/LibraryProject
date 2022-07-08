@@ -1,9 +1,11 @@
 ﻿using Lesson1_BL;
 using Lesson1_DAL;
+using Lesson1_DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Lesson1.Controllers
 {
@@ -21,23 +23,23 @@ namespace Lesson1.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Client> GetAll()
+        public async Task<IEnumerable<Client>> GetAll()
         {
-            return _clientsService.GetAllClients();
+            return await _clientsService.GetAllClients();
         }
 
         [HttpGet("{id}")]
-        public Client GetById(Guid id)
+        public async Task<Client> GetById(Guid id)
         {
-            return _clientsService.GetByIdClient(id);
+            return await _clientsService.GetByIdClient(id);
         }
 
         [HttpPost]
-        public IActionResult Add(Client client)
+        public async Task<IActionResult> Add(Client client)
         {
             try
             {
-                var result = _clientsService.AddClient(client);
+                var result = await _clientsService.AddClient(client);
 
                 return Created(result.ToString(), client);
             }
@@ -48,12 +50,12 @@ namespace Lesson1.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(Guid id, Client client)
+        public async Task<IActionResult> Update(Guid id, Client client)
         {
             try
             {
                 client.Id = id;
-                var result = _clientsService.UpdateClient(client);
+                var result = await _clientsService.UpdateClient(client);
 
                 return Ok();
             }
@@ -64,17 +66,17 @@ namespace Lesson1.Controllers
         }
 
         [HttpDelete("{id}")]
-        public bool Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            return _clientsService.DeleteByIdClient(id);
+            return await _clientsService.DeleteByIdClient(id);
         }
 
         [HttpPut("rent")]
-        public IActionResult RentABook(Guid bookId, Guid clientId)
+        public async Task<IActionResult> RentABook(Guid bookId, Guid clientId)
         {
             try
             {
-                var result = _clientsService.RentABook(bookId, clientId);
+                var result = await _clientsService.RentABook(bookId, clientId);
 
                 return Ok();
             }
@@ -85,11 +87,11 @@ namespace Lesson1.Controllers
         }
 
         [HttpPut("return")]
-        public IActionResult ReturnABook(Guid bookId, Guid clientId, bool isLost, bool isDamaged, bool isDelayed)
+        public async Task<IActionResult> ReturnABook(Guid bookId, Guid clientId, bool isLost, bool isDamaged, bool isDelayed)
         {
             try
             {
-                var result = _clientsService.ReturnABook(bookId, clientId, isLost, isDamaged);
+                var result = await _clientsService.ReturnABook(bookId, clientId, isLost, isDamaged);
 
                 return Ok();
             }
@@ -100,11 +102,11 @@ namespace Lesson1.Controllers
         }
 
         [HttpPut("deposit")]
-        public IActionResult Deposit(double amount, Guid clientId)
+        public async Task<IActionResult> Deposit(double amount, Guid clientId)
         {
             try
             {
-                var result = _clientsService.Deposit(amount, clientId);
+                var result = await _clientsService.Deposit(amount, clientId);
 
                 return Ok();
             }

@@ -1,9 +1,10 @@
 ﻿using Lesson1_BL;
-using Lesson1_DAL;
+using Lesson1_DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Lesson1.Controllers
 {
@@ -21,23 +22,23 @@ namespace Lesson1.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Book> GetAll()
+        public async Task<IEnumerable<Book>> GetAll()
         {
-            return _booksService.GetAllBooks();
+            return await _booksService.GetAllBooks();
         }
 
         [HttpGet("{id}")]
-        public Book GetById(Guid id)
+        public async Task<Book> GetById(Guid id)
         {
-            return _booksService.GetByIdBook(id);
+            return await _booksService.GetByIdBook(id);
         }
 
         [HttpPost]
-        public IActionResult Add(Book book)
+        public async Task<IActionResult> Add(Book book)
         {
             try
             {
-                var result = _booksService.AddBook(book);
+                var result = await _booksService.AddBook(book);
 
                 return Created(result.ToString(), book);
             }
@@ -48,12 +49,12 @@ namespace Lesson1.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(Guid id, Book book)
+        public async Task<IActionResult> Update(Guid id, Book book)
         {
             try
             {
                 book.Id = id;
-                var result = _booksService.UpdateBook(book);
+                var result = await _booksService.UpdateBook(book);
 
                 return Ok();
             }
@@ -64,21 +65,21 @@ namespace Lesson1.Controllers
         }
 
         [HttpDelete("{id}")]
-        public bool Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            return _booksService.DeleteByIdBook(id);
+            return await _booksService.DeleteByIdBook(id);
         }
 
         [HttpGet("getByCity")]
-        public IEnumerable<Book> GetByCity(string cityName)
+        public async Task<IEnumerable<Book>> GetByCity(string cityName)
         {
-            return _booksService.GetBooksByCity(cityName);
+            return await _booksService.GetBooksByCity(cityName);
         }
 
         [HttpGet("mostReadableBooks")]
-        public IEnumerable<Book> GetMostReadableBooks(int top)
+        public async Task<IEnumerable<Book>> GetMostReadableBooks(int top)
         {
-            return _booksService.GetMostReadableBooks(top);
+            return await _booksService.GetMostReadableBooks(top);
         }
     }
 }

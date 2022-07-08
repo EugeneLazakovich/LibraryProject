@@ -1,24 +1,26 @@
 ﻿using Lesson1_DAL;
+using Lesson1_DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Lesson1_BL
 {
     public class CitiesService : ICitiesService
     {
-        private readonly ICitiesRepository _citiesRepository;
-        public CitiesService(ICitiesRepository citiesRepository)
+        private readonly IGenericRepository<City> _citiesRepository;
+        public CitiesService(IGenericRepository<City> citiesRepository)
         {
             _citiesRepository = citiesRepository;
         }
-        public Guid AddCity(City city)
+        public async Task<Guid> AddCity(City city)
         {
-            return _citiesRepository.Add(city);
+            return await _citiesRepository.Add(city);
         }
 
-        public IEnumerable<City> GetAllCities()
+        public async Task<IEnumerable<City>> GetAllCities()
         {
-            return _citiesRepository.GetAll();
+            return await _citiesRepository.GetAll();
         }
     }
 }

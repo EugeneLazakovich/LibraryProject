@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace Lesson1_DAL.Models
 {
-    public class City : BaseEntity
+    public abstract class BaseEntity
     {
-        [Required]
-        [MinLength(2)]
-        [MaxLength(30)]
-        public string Name { get; set; }
+        [Key]
+        public Guid Id { get; set; }
     }
 }

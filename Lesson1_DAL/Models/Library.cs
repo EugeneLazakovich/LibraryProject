@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Lesson1_DAL
+namespace Lesson1_DAL.Models
 {
-    public class Library
+    public class Library : BaseEntity
     {
-        public Guid Id { get; set; }
-        [Required]
-        [MinLength(2)]
-        [MaxLength(30)]
-        public string Name { get; set; }
+        public string FullAddress { get; set; }
+        [ForeignKey("Location")]
+        public Guid LocationId { get; set; }
+        [ForeignKey("City")]
+        public Guid CityId { get; set; }
         public City City { get; set; }
         public Location Location { get; set; }
-        public List<Book> Books { get; set; }
     }
 }
