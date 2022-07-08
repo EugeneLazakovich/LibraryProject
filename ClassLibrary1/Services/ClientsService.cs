@@ -9,12 +9,12 @@ namespace Lesson1_BL
     public class ClientsService : IClientsService
     {
         private readonly IGenericRepository<Client> _clientsRepository;
-        private readonly IGenericRepository<Book> _booksRepository;
+        private readonly IGenericRepository<BookRevision> _booksRevisionRepository;
         private readonly DefaultSettings _defaultSettings = new DefaultSettings();
-        public ClientsService(IGenericRepository<Client> clientsRepository, IGenericRepository<Book> booksRepository)
+        public ClientsService(IGenericRepository<Client> clientsRepository, IGenericRepository<BookRevision> bookRevisionRepository)
         {
             _clientsRepository = clientsRepository;
-            _booksRepository = booksRepository;
+            _booksRevisionRepository = bookRevisionRepository;
         }
         public async Task<Guid> AddClient(Client client)
         {
@@ -41,58 +41,58 @@ namespace Lesson1_BL
             return await _clientsRepository.Update(client);
         }
 
-        public async Task<bool> RentABook(Guid bookId, Guid clientId)
+        public async Task<bool> RentABook(Guid bookRevisionId, Guid clientId)
         {
-            var book = await _booksRepository.GetById(bookId);
+            /*var bookRevision = await _booksRevisionRepository.GetById(bookRevisionId);
             var client = await _clientsRepository.GetById(clientId);
-            CheckEmptiesOnNull(book, client);
+            CheckEmptiesOnNull(bookRevision, client);
             CheckClientOnBlocked(client);
                         
-            /*if (book.Client != null)
+            if (bookRevision.Client != null)
             {
                 throw new ArgumentException("The book has been already rented!");
             }
             if (client.Books != null)
             {
-                if (client.Books.Contains(book))
+                if (client.Books.Contains(bookRevision))
                 {
                     throw new ArgumentException("The client has this book!");
                 }                
             }
-            book.Client = client;
-            book.RentCount++;
-            book.DateOfRent = DateTime.Now;
-            book.DaysForRent = _defaultSettings.DaysForRent;*/
-            await _booksRepository.Update(book);
+            bookRevision.Client = client;
+            bookRevision.RentCount++;
+            bookRevision.DateGet = DateTime.Now;
+            bookRevision.DaysForRent = _defaultSettings.DaysForRent;
+            await _booksRevisionRepository.Update(bookRevision);
 
-            client.Books.Add(book);
-            await _clientsRepository.Update(client);
+            client.Books.Add(bookRevision);
+            await _clientsRepository.Update(client);*/
 
             return true;
         }
 
-        public async Task<bool> ReturnABook(Guid bookId, Guid clientId, bool isLost, bool isDamaged)
+        public async Task<bool> ReturnABook(Guid bookRevisionId, Guid clientId, bool isLost, bool isDamaged)
         {
-            var  book = await _booksRepository.GetById(bookId);
+            /*var bookRevision = await _booksRevisionRepository.GetById(bookRevisionId);
             var client = await _clientsRepository.GetById(clientId);
-            CheckEmptiesOnNull(book, client);
+            CheckEmptiesOnNull(bookRevision, client);
 
-            /*if (book.Client == null)
+            if (bookRevision.Client == null)
             {
                 throw new ArgumentException("The book is in library!");
             }            
             if (client.Books == null)
             {
-                if (!client.Books.Contains(book))
+                if (!client.Books.Contains(bookRevision))
                 {
                     throw new ArgumentException("The client don't have this book!");
                 }                
             }
             bool result = false;
-            CheckStateBook(client, book, isLost, isDamaged, ref result);
-            if(book != null)
+            CheckStateBook(client, bookRevision, isLost, isDamaged, ref result);
+            if(bookRevision != null)
             {
-                client.Books.Remove(book);
+                client.Books.Remove(bookRevision);
             }
             client.IsBlocked = client.Amount < 0;
             await _clientsRepository.Update(client);
@@ -101,20 +101,20 @@ namespace Lesson1_BL
                 throw new ArgumentException("The client lost this book!");
             }
 
-            book.Client = null;
-            book.DateOfRent = null;
-            book.DaysForRent = 0;*/
-            await _booksRepository.Update(book);           
+            bookRevision.Client = null;
+            bookRevision.DateOfRent = null;
+            bookRevision.DaysForRent = 0;
+            await _booksRevisionRepository.Update(bookRevision);  */         
 
             return true;
         }
 
-        private void CheckStateBook(Client client, Book book, bool isLost, bool isDamaged, ref bool result)
+        private void CheckStateBook(Client client, BookRevision bookRevision, bool isLost, bool isDamaged, ref bool result)
         {
             /*if (isLost)
             {
                 client.Amount -= _defaultSettings.PriceForLost;
-                _booksRepository.DeleteById(book.Id);
+                _booksRevisionRepository.DeleteById(bookRevision.Id);
                 result = true;
             }
             else
@@ -123,11 +123,11 @@ namespace Lesson1_BL
                 {
                     client.Amount -= _defaultSettings.PriceForDamaged;
                 }
-                if ((DateTime.Now - (DateTime)book.DateOfRent).TotalDays > book.DaysForRent)
+                if ((DateTime.Now - (DateTime)bookRevision.DateOfRent).TotalDays > bookRevision.DaysForRent)
                 {
                     client.Amount -= _defaultSettings.PriceForDelayed;
                 }
-            }  */          
+            }  */       
         }
 
         public async Task<bool> Deposit(double amount, Guid clientId)
@@ -140,11 +140,11 @@ namespace Lesson1_BL
             return true;
         }
 
-        private static void CheckEmptiesOnNull(Book book, Client client)
+        private static void CheckEmptiesOnNull(BookRevision bookRevision, Client client)
         {
-            CheckBookOnNull(book);
+            CheckBookOnNull(bookRevision);
             CheckClientOnNull(client); 
-            CheckDateOfRentOnNull(book);
+            CheckDateOfRentOnNull(bookRevision);
         }
 
         private static void CheckClientOnNull(Client client)
@@ -155,18 +155,18 @@ namespace Lesson1_BL
             }
         }
 
-        private static void CheckBookOnNull(Book book)
+        private static void CheckBookOnNull(BookRevision bookRevision)
         {
-            if (book == null)
+            if (bookRevision == null)
             {
                 throw new ArgumentException("The book doesn't exist!");
             }
         }
-        private static void CheckDateOfRentOnNull(Book book)
+        private static void CheckDateOfRentOnNull(BookRevision bookRevision)
         {
-            /*if (book != null)
+            /*if (bookRevision != null)
             {
-                if(book.DateOfRent == null)
+                if(bookRevision.DateOfRent == null)
                 {
                     throw new ArgumentException("The date of rent is empty!");
                 }                

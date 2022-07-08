@@ -28,9 +28,9 @@ namespace Lesson1_BL
         {
             Dictionary<Library, double> unsortedDict = new Dictionary<Library, double>();
             var libraries = await _librariesRepository.GetAll();
-            double XCoor = location.XCoordinate;
-            double YCoor = location.YCoordinate;
-            /*foreach(var library in libraries.Where(c => c.Location != null))
+            float XCoor = location.XCoordinate;
+            float YCoor = location.YCoordinate;
+            foreach(var library in libraries.Where(c => c.Location != null))
             {
                 library.Location.XCoordinate -= XCoor;
                 if(library.Location.XCoordinate < -180)
@@ -40,11 +40,11 @@ namespace Lesson1_BL
                 library.Location.YCoordinate -= YCoor;
                 if (library.Location.YCoordinate < -90)
                 {
-                    library.Location.YCoordinate += 90 - library.Location.YCoordinate;
+                    library.Location.YCoordinate = 180 - library.Location.YCoordinate;
                 }
                 double distance = Math.Sqrt(Math.Pow(library.Location.XCoordinate, 2) + Math.Pow(library.Location.YCoordinate, 2));
                 unsortedDict.Add(library, distance);
-            }*/
+            }
             //var sortedDict = from entry in dictUnsortableLibraries orderby entry.Value ascending select entry;
             var sortedDict = unsortedDict.OrderBy(c => c.Value);
 
