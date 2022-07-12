@@ -1,4 +1,5 @@
 ﻿using Lesson1_DAL;
+using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Models;
 using System;
 using System.Linq;
@@ -8,9 +9,9 @@ namespace Lesson1_BL
 {
     public class BackgroundsService : IBackgroundsService
     {
-        private readonly IGenericRepository<Client> _clientsRepository;
+        private readonly IGenericRepository<User> _clientsRepository;
         private readonly DefaultSettings _defaultSettings = new DefaultSettings();
-        public BackgroundsService(IGenericRepository<Client> clientsRepository)
+        public BackgroundsService(IGenericRepository<User> clientsRepository)
         {
             _clientsRepository = clientsRepository;
         }

@@ -1,22 +1,23 @@
 ﻿using Lesson1_DAL;
+using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Lesson1_BL
+namespace Lesson1_BL.Services.UsersService
 {
-    public class ClientsService : IClientsService
+    public class UsersService : IUsersService
     {
-        private readonly IGenericRepository<Client> _clientsRepository;
+        private readonly IGenericRepository<User> _clientsRepository;
         private readonly IGenericRepository<BookRevision> _booksRevisionRepository;
         private readonly DefaultSettings _defaultSettings = new DefaultSettings();
-        public ClientsService(IGenericRepository<Client> clientsRepository, IGenericRepository<BookRevision> bookRevisionRepository)
+        public UsersService(IGenericRepository<User> clientsRepository, IGenericRepository<BookRevision> bookRevisionRepository)
         {
             _clientsRepository = clientsRepository;
             _booksRevisionRepository = bookRevisionRepository;
         }
-        public async Task<Guid> AddClient(Client client)
+        public async Task<Guid> AddClient(User client)
         {
             return await _clientsRepository.Add(client);
         }
@@ -26,17 +27,17 @@ namespace Lesson1_BL
             return await _clientsRepository.DeleteById(id);
         }
 
-        public async Task<IEnumerable<Client>> GetAllClients()
+        public async Task<IEnumerable<User>> GetAllClients()
         {
             return await _clientsRepository.GetAll();
         }
 
-        public async Task<Client> GetByIdClient(Guid id)
+        public async Task<User> GetByIdClient(Guid id)
         {
             return await _clientsRepository.GetById(id);
         }
 
-        public async Task<bool> UpdateClient(Client client)
+        public async Task<bool> UpdateClient(User client)
         {
             return await _clientsRepository.Update(client);
         }
@@ -109,7 +110,7 @@ namespace Lesson1_BL
             return true;
         }
 
-        private void CheckStateBook(Client client, BookRevision bookRevision, bool isLost, bool isDamaged, ref bool result)
+        private void CheckStateBook(User client, BookRevision bookRevision, bool isLost, bool isDamaged, ref bool result)
         {
             /*if (isLost)
             {
@@ -140,14 +141,14 @@ namespace Lesson1_BL
             return true;
         }
 
-        private static void CheckEmptiesOnNull(BookRevision bookRevision, Client client)
+        private static void CheckEmptiesOnNull(BookRevision bookRevision, User client)
         {
             CheckBookOnNull(bookRevision);
             CheckClientOnNull(client); 
             CheckDateOfRentOnNull(bookRevision);
         }
 
-        private static void CheckClientOnNull(Client client)
+        private static void CheckClientOnNull(User client)
         {
             if (client == null)
             {
@@ -173,7 +174,7 @@ namespace Lesson1_BL
             }*/
         }
 
-        private static void CheckClientOnBlocked(Client client)
+        private static void CheckClientOnBlocked(User client)
         {
             if (client != null && client.IsBlocked == true)
             {

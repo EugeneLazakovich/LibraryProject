@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lesson1_DAL.Models
 {
-    public class Client : BaseEntity
+    public class User : BaseEntity
     {
         [Required]
         [MinLength(2)]
@@ -15,8 +16,12 @@ namespace Lesson1_DAL.Models
         [MaxLength(20)]
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
+        public string Email { get; set; }
         public bool IsBlocked { get; set; }
-        public List<Book> Books { get; set; }
         public double Amount { get; set; }
+        public string Password { get; set; }
+        [ForeignKey("Role")]
+        public Guid? RoleId { get; set; }
+        public Role Role { get; set; }
     }
 }

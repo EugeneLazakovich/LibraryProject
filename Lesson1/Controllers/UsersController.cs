@@ -1,4 +1,6 @@
 ﻿using Lesson1_BL;
+using Lesson1_BL.Services.AuthService;
+using Lesson1_BL.Services.UsersService;
 using Lesson1_DAL;
 using Lesson1_DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,31 +13,33 @@ namespace Lesson1.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ClientsController : ControllerBase
+    public class UsersController : ControllerBase
     {
-        private readonly ILogger<ClientsController> _logger;
-        private readonly IClientsService _clientsService;
+        private readonly ILogger<UsersController> _logger;
+        private readonly IUsersService _clientsService;
+        private readonly IAuthService _authService;
 
-        public ClientsController(IClientsService clientsService, ILogger<ClientsController> logger)
+        public UsersController(IUsersService clientsService, IAuthService authService, ILogger<UsersController> logger)
         {
             _clientsService = clientsService;
+            _authService = authService;
             _logger = logger;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Client>> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
             return await _clientsService.GetAllClients();
         }
 
         [HttpGet("{id}")]
-        public async Task<Client> GetById(Guid id)
+        public async Task<User> GetById(Guid id)
         {
             return await _clientsService.GetByIdClient(id);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(Client client)
+        public async Task<IActionResult> Add(User client)
         {
             try
             {
@@ -50,7 +54,7 @@ namespace Lesson1.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, Client client)
+        public async Task<IActionResult> Update(Guid id, User client)
         {
             try
             {
@@ -114,6 +118,21 @@ namespace Lesson1.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("signin")]
+        public async Task<IActionResult> SignIn(string login, string password)
+        {
+            string token = null;
+            try
+            {
+                token = await _authService.SignIn(login, password);
+            }
+            catch (ArgumentException)
+            {
+            }
+
+            return !String.IsNullOrEmpty(token) ? Ok(token) : Unauthorized();
         }
     }
 }

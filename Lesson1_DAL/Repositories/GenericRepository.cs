@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lesson1_DAL
+namespace Lesson1_DAL.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T>
         where T : BaseEntity, new()
@@ -56,6 +58,11 @@ namespace Lesson1_DAL
             _dbContext.Entry(item).State = EntityState.Modified;
 
             return await _dbContext.SaveChangesAsync() != 0;
+        }
+
+        public async Task<T> GetByPredicate(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).FirstOrDefaultAsync();
         }
     }
 }

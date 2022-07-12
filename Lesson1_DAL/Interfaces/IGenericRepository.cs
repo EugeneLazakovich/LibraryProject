@@ -1,9 +1,10 @@
 ﻿using Lesson1_DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Lesson1_DAL
+namespace Lesson1_DAL.Interfaces
 {
     public interface IGenericRepository<T>
         where T : BaseEntity, new()
@@ -13,5 +14,6 @@ namespace Lesson1_DAL
         Task<bool> DeleteById(Guid id);
         Task<bool> Update(T item);
         Task<Guid> Add(T item);
+        Task<T> GetByPredicate(Expression<Func<T, bool>> predicate);
     }
 }

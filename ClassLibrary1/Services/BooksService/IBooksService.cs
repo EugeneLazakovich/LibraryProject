@@ -1,10 +1,11 @@
-﻿using Lesson1_DAL;
+﻿using Lesson1_BL.DTOs;
+using Lesson1_DAL;
 using Lesson1_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Lesson1_BL
+namespace Lesson1_BL.Services.BooksService
 {
     public interface IBooksService
     {
@@ -15,5 +16,6 @@ namespace Lesson1_BL
         Task<Guid> AddBook(Book book);
         Task<IEnumerable<Book>> GetBooksByCity(string cityName);
         Task<IEnumerable<Book>> GetMostReadableBooks(int top);
+        Task<BookDto> GetBookFullInfo(Guid id);
     }
 }
