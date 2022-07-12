@@ -4,17 +4,17 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Lesson1_BL
+namespace Lesson1_BL.Services.UsersService
 {
-    public interface IClientsService
+    public interface IUsersService
     {
         Task<bool> RentABook(Guid bookId, Guid clientId);
         Task<bool> ReturnABook(Guid bookId, Guid clientId, bool isLost, bool isDamaged);
-        Task<IEnumerable<Client>> GetAllClients();
-        Task<Client> GetByIdClient(Guid id);
+        Task<IEnumerable<User>> GetAllClients();
+        Task<User> GetByIdClient(Guid id);
         Task<bool> DeleteByIdClient(Guid id);
-        Task<bool> UpdateClient(Client client);
-        Task<Guid> AddClient(Client client);
+        Task<bool> UpdateClient(User client);
+        Task<Guid> AddClient(User client);
         Task<bool> Deposit(double amount, Guid clientId);
     }
 }

@@ -1,11 +1,19 @@
 using Lesson1_BL;
+using Lesson1_BL.Auth;
+using Lesson1_BL.Services.AuthService;
+using Lesson1_BL.Services.BooksService;
+using Lesson1_BL.Services.UsersService;
 using Lesson1_DAL;
+using Lesson1_DAL.Interfaces;
+using Lesson1_DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Lesson1
 {
@@ -21,15 +29,32 @@ namespace Lesson1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidIssuer = AuthOptions.ISSUER,
+                            ValidateAudience = true,
+                            ValidAudience = AuthOptions.AUDIENCE,
+                            ValidateLifetime = true,
+                            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                            ValidateIssuerSigningKey = true,
+                        };
+                    });
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IBooksRepository, BooksRepository>();
             services.AddScoped<IBooksService, BooksService>();
-            services.AddScoped<IClientsService, ClientsService>();
+            services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IBackgroundsService, BackgroundsService>();
             services.AddScoped<ICitiesService, CitiesService>();
             services.AddScoped<ILibrariesService, LibrariesService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddDbContext<EFCoreDbContext>(options =>
-               options.UseSqlServer(Configuration["ConnectionStrings:Default"], b => b.MigrationsAssembly("Lesson1")));
+               options.UseSqlServer(Configuration["ConnectionStrings:Default"], b => b.MigrationsAssembly("Lesson1_DAL")));
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
@@ -48,6 +73,7 @@ namespace Lesson1
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

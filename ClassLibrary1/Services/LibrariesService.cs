@@ -1,4 +1,5 @@
 ﻿using Lesson1_DAL;
+using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -32,17 +33,27 @@ namespace Lesson1_BL
             float YCoor = location.YCoordinate;
             foreach(var library in libraries.Where(c => c.Location != null))
             {
-                library.Location.XCoordinate -= XCoor;
-                if(library.Location.XCoordinate < -180)
+                var libX = library.Location.XCoordinate;
+                var libY = library.Location.YCoordinate;
+                libX -= XCoor;
+                if(libX < -180)
                 {
-                    library.Location.XCoordinate += 360;
+                    libX += 360;
                 }
-                library.Location.YCoordinate -= YCoor;
-                if (library.Location.YCoordinate < -90)
+                if (libX > 180)
                 {
-                    library.Location.YCoordinate = 180 - library.Location.YCoordinate;
+                    libX -= 360;
                 }
-                double distance = Math.Sqrt(Math.Pow(library.Location.XCoordinate, 2) + Math.Pow(library.Location.YCoordinate, 2));
+                libY -= YCoor;
+                if (libY < -90)
+                {
+                    libY = -180 - libY;
+                }
+                if (libY > 90)
+                {
+                    libY = 180 - libY;
+                }
+                double distance = Math.Sqrt(Math.Pow(libX, 2) + Math.Pow(libY, 2));
                 unsortedDict.Add(library, distance);
             }
             //var sortedDict = from entry in dictUnsortableLibraries orderby entry.Value ascending select entry;

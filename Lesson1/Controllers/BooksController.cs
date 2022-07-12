@@ -1,5 +1,8 @@
 ﻿using Lesson1_BL;
+using Lesson1_BL.DTOs;
+using Lesson1_BL.Services.BooksService;
 using Lesson1_DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -21,6 +24,7 @@ namespace Lesson1.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = Roles.Reader)]
         [HttpGet]
         public async Task<IEnumerable<Book>> GetAll()
         {
@@ -80,6 +84,12 @@ namespace Lesson1.Controllers
         public async Task<IEnumerable<Book>> GetMostReadableBooks(int top)
         {
             return await _booksService.GetMostReadableBooks(top);
+        }
+
+        [HttpGet("full/{id}")]
+        public async Task<BookDto> GetFullBookInfo(Guid id)
+        {
+            return await _booksService.GetBookFullInfo(id);
         }
     }
 }
