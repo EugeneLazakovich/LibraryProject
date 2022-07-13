@@ -1,8 +1,10 @@
-﻿using Lesson1_DAL;
+﻿using Lesson1_BL.DTOs;
+using Lesson1_DAL;
 using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lesson1_BL.Services.UsersService
@@ -11,11 +13,19 @@ namespace Lesson1_BL.Services.UsersService
     {
         private readonly IGenericRepository<User> _clientsRepository;
         private readonly IGenericRepository<BookRevision> _booksRevisionRepository;
+        private readonly IRentBookRepository _rentBookRepository;
+        private readonly ILibrariesService _librariesService;
         private readonly DefaultSettings _defaultSettings = new DefaultSettings();
-        public UsersService(IGenericRepository<User> clientsRepository, IGenericRepository<BookRevision> bookRevisionRepository)
+        public UsersService(
+            IGenericRepository<User> clientsRepository, 
+            IGenericRepository<BookRevision> bookRevisionRepository, 
+            IRentBookRepository rentBookRepository,
+            ILibrariesService librariesService)
         {
             _clientsRepository = clientsRepository;
             _booksRevisionRepository = bookRevisionRepository;
+            _rentBookRepository = rentBookRepository;
+            _librariesService = librariesService;
         }
         public async Task<Guid> AddClient(User client)
         {
@@ -40,75 +50,7 @@ namespace Lesson1_BL.Services.UsersService
         public async Task<bool> UpdateClient(User client)
         {
             return await _clientsRepository.Update(client);
-        }
-
-        public async Task<bool> RentABook(Guid bookRevisionId, Guid clientId)
-        {
-            /*var bookRevision = await _booksRevisionRepository.GetById(bookRevisionId);
-            var client = await _clientsRepository.GetById(clientId);
-            CheckEmptiesOnNull(bookRevision, client);
-            CheckClientOnBlocked(client);
-                        
-            if (bookRevision.Client != null)
-            {
-                throw new ArgumentException("The book has been already rented!");
-            }
-            if (client.Books != null)
-            {
-                if (client.Books.Contains(bookRevision))
-                {
-                    throw new ArgumentException("The client has this book!");
-                }                
-            }
-            bookRevision.Client = client;
-            bookRevision.RentCount++;
-            bookRevision.DateGet = DateTime.Now;
-            bookRevision.DaysForRent = _defaultSettings.DaysForRent;
-            await _booksRevisionRepository.Update(bookRevision);
-
-            client.Books.Add(bookRevision);
-            await _clientsRepository.Update(client);*/
-
-            return true;
-        }
-
-        public async Task<bool> ReturnABook(Guid bookRevisionId, Guid clientId, bool isLost, bool isDamaged)
-        {
-            /*var bookRevision = await _booksRevisionRepository.GetById(bookRevisionId);
-            var client = await _clientsRepository.GetById(clientId);
-            CheckEmptiesOnNull(bookRevision, client);
-
-            if (bookRevision.Client == null)
-            {
-                throw new ArgumentException("The book is in library!");
-            }            
-            if (client.Books == null)
-            {
-                if (!client.Books.Contains(bookRevision))
-                {
-                    throw new ArgumentException("The client don't have this book!");
-                }                
-            }
-            bool result = false;
-            CheckStateBook(client, bookRevision, isLost, isDamaged, ref result);
-            if(bookRevision != null)
-            {
-                client.Books.Remove(bookRevision);
-            }
-            client.IsBlocked = client.Amount < 0;
-            await _clientsRepository.Update(client);
-            if (result)
-            {
-                throw new ArgumentException("The client lost this book!");
-            }
-
-            bookRevision.Client = null;
-            bookRevision.DateOfRent = null;
-            bookRevision.DaysForRent = 0;
-            await _booksRevisionRepository.Update(bookRevision);  */         
-
-            return true;
-        }
+        }        
 
         private void CheckStateBook(User client, BookRevision bookRevision, bool isLost, bool isDamaged, ref bool result)
         {

@@ -23,12 +23,6 @@ namespace Lesson1_DAL.Repositories
         public async Task<Guid> Add(T item)
         {
             item.Id = Guid.NewGuid();
-            /*item.Client = null;
-            item.DateOfRent = null;
-            item.DaysForRent = 0;
-            item.IsDamaged = false;
-            item.IsDelayed = false;
-            item.RentCount = 0;*/
             _dbSet.Add(item);
             await _dbContext.SaveChangesAsync();
 
@@ -63,6 +57,11 @@ namespace Lesson1_DAL.Repositories
         public async Task<T> GetByPredicate(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.Where(predicate).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllByPredicate(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
         }
     }
 }

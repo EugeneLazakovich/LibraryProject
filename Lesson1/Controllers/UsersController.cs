@@ -75,36 +75,6 @@ namespace Lesson1.Controllers
             return await _clientsService.DeleteByIdClient(id);
         }
 
-        [HttpPut("rent")]
-        public async Task<IActionResult> RentABook(Guid bookId, Guid clientId)
-        {
-            try
-            {
-                var result = await _clientsService.RentABook(bookId, clientId);
-
-                return Ok();
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("return")]
-        public async Task<IActionResult> ReturnABook(Guid bookId, Guid clientId, bool isLost, bool isDamaged, bool isDelayed)
-        {
-            try
-            {
-                var result = await _clientsService.ReturnABook(bookId, clientId, isLost, isDamaged);
-
-                return Ok();
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
         [HttpPut("deposit")]
         public async Task<IActionResult> Deposit(double amount, Guid clientId)
         {

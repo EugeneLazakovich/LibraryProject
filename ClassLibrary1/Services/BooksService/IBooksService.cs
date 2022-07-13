@@ -16,6 +16,6 @@ namespace Lesson1_BL.Services.BooksService
         Task<Guid> AddBook(Book book);
         Task<IEnumerable<Book>> GetBooksByCity(string cityName);
         Task<IEnumerable<Book>> GetMostReadableBooks(int top);
-        Task<BookDto> GetBookFullInfo(Guid id);
+        Task<BookWithRevisionsDto> GetBookFullInfo(Guid id);
     }
 }

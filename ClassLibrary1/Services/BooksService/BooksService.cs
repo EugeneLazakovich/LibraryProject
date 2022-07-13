@@ -53,16 +53,16 @@ namespace Lesson1_BL.Services.BooksService
             return (await _genericBookRepository.GetAll());
         }
 
-        public async Task<BookDto> GetBookFullInfo(Guid id)
+        public async Task<BookWithRevisionsDto> GetBookFullInfo(Guid id)
         {
             var result = await _booksRepository.GetFullInfo(id);
 
             return MapTupleToBookDto(result);
         }
 
-        private BookDto MapTupleToBookDto((Book book, IEnumerable<BookRevision> bookRevisions) result)
+        private BookWithRevisionsDto MapTupleToBookDto((Book book, IEnumerable<BookRevision> bookRevisions) result)
         {
-            return new BookDto
+            return new BookWithRevisionsDto
             {
                 Author = result.book?.Author,
                 BookId = result.book.Id,

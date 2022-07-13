@@ -8,7 +8,7 @@ namespace Lesson1_DAL.Models
     public class LibraryBooks : BaseEntity
     {
         [ForeignKey("Revision")]
-        public Guid RevisionId { get; set; }
+        public Guid BookRevisionId { get; set; }
         public BookRevision BookRevision { get; set; }
         [ForeignKey("Library")]
         public Guid LibraryId { get; set; }
