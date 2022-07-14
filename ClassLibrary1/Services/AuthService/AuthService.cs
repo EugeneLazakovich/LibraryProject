@@ -2,8 +2,6 @@
 using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Lesson1_BL.Services.AuthService
@@ -12,10 +10,15 @@ namespace Lesson1_BL.Services.AuthService
     {
         private readonly IGenericRepository<User> _genericClientRepository;
         private readonly IGenericRepository<Role> _genericRoleRepository;
-        public AuthService(IGenericRepository<User> genericClientRepository, IGenericRepository<Role> genericRoleRepository)
+        private readonly ITokenGenerator _tokenGenerator;
+        public AuthService(
+            IGenericRepository<User> genericClientRepository, 
+            IGenericRepository<Role> genericRoleRepository,
+            ITokenGenerator tokenGenerator)
         {
             _genericClientRepository = genericClientRepository;
             _genericRoleRepository = genericRoleRepository;
+            _tokenGenerator = tokenGenerator;
         }
 
         public async Task<string> SignIn(string login, string password)
@@ -28,7 +31,7 @@ namespace Lesson1_BL.Services.AuthService
             }
             var role = user.RoleId.HasValue ? (await _genericRoleRepository.GetById(user.RoleId.Value)).Name : Roles.Reader;
 
-            return TokenGenerator.GenerateToken(user.Email, role);
+            return _tokenGenerator.GenerateToken(user.Email, role);
         }
     }
 }

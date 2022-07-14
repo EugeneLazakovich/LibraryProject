@@ -1,10 +1,9 @@
 ﻿using Lesson1_BL.DTOs;
+using Lesson1_BL.Services.LibrariesService;
 using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Lesson1_BL.Services.RentBookService
@@ -51,7 +50,7 @@ namespace Lesson1_BL.Services.RentBookService
 
         public async Task<RentBookDto> RentABook(Location location, Guid bookId, Guid clientId, int top)
         {
-            var nearestLibraries = await _librariesService.GetNearestLibraries(location, top);
+            /*var nearestLibraries = await _librariesService.GetNearestLibraries(location, top);
             var result = await _rentBookRepository.GetFullInfo(bookId);
             bool isFindBookInLibrary = false;
             Library library = null;
@@ -83,7 +82,8 @@ namespace Lesson1_BL.Services.RentBookService
                     DateReturn = null
                 });
 
-            return MapTupleToRentBookDto(result, library);
+            return MapTupleToRentBookDto(result, library);*/
+            throw new ArgumentException();
         }
 
         private RentBookDto MapTupleToRentBookDto((Book book, BookRevision bookRevision, IEnumerable<LibraryBooks> libraryBooks) result, Library library)

@@ -1,7 +1,5 @@
-﻿using Lesson1_BL;
-using Lesson1_BL.Services.AuthService;
+﻿using Lesson1_BL.Services.AuthService;
 using Lesson1_BL.Services.UsersService;
-using Lesson1_DAL;
 using Lesson1_DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Lesson1_DAL.Repositories
@@ -22,7 +21,7 @@ namespace Lesson1_DAL.Repositories
             var libraryBooks = await _dbContext.LibraryBooks.Include(x => x.BookRevision).Where(x => x.BookRevision.BookId == bookId).ToListAsync();
 
             var book = libraryBooks.FirstOrDefault()?.BookRevision.Book;
-            var bookRevision = libraryBooks?.FirstOrDefault()?.BookRevision;
+            var bookRevision = libraryBooks.FirstOrDefault()?.BookRevision;
 
             return (book, bookRevision, libraryBooks);
         }

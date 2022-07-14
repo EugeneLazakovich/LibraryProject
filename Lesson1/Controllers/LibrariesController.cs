@@ -1,11 +1,9 @@
-﻿using Lesson1_BL;
-using Lesson1_DAL;
+﻿using Lesson1_BL.DTOs;
+using Lesson1_BL.Services.LibrariesService;
 using Lesson1_DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lesson1.Controllers
@@ -23,31 +21,10 @@ namespace Lesson1.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<Library>> GetAll()
-        {
-            return await _librariesService.GetAllLibraries();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Add(Library library)
-        {
-            try
-            {
-                var result = await _librariesService.AddLibrary(library);
-
-                return Created(result.ToString(), library);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
         [HttpGet("top")]
-        public async Task<IEnumerable<string>> GetNearestLibraries(Location location, int top)
+        public async Task<IEnumerable<NearestLibraryDto>> GetNearestLibraries(Location location, int top)
         {
-            return (await _librariesService.GetNearestLibraries(location, top)).Select(c => c.FullAddress);
+            return await _librariesService.GetNearestLibraries(location, top);
         }
     }
 }

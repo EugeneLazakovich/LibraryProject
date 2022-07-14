@@ -1,7 +1,9 @@
 using Lesson1_BL;
 using Lesson1_BL.Auth;
+using Lesson1_BL.Options;
 using Lesson1_BL.Services.AuthService;
 using Lesson1_BL.Services.BooksService;
+using Lesson1_BL.Services.LibrariesService;
 using Lesson1_BL.Services.RentBookService;
 using Lesson1_BL.Services.UsersService;
 using Lesson1_DAL;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Lesson1
 {
@@ -30,6 +33,12 @@ namespace Lesson1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Key));
+            services.Configure<AuthOptions>(options =>
+                Configuration.GetSection(nameof(AuthOptions)).Bind(options));
+
+            var authOptions = Configuration.GetSection(nameof(AuthOptions)).Get<AuthOptions>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
@@ -37,17 +46,18 @@ namespace Lesson1
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             ValidateIssuer = true,
-                            ValidIssuer = AuthOptions.ISSUER,
+                            ValidIssuer = authOptions.Issuer,
                             ValidateAudience = true,
-                            ValidAudience = AuthOptions.AUDIENCE,
+                            ValidAudience = authOptions.Audience,
                             ValidateLifetime = true,
-                            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authOptions.Key)),
                             ValidateIssuerSigningKey = true,
                         };
                     });
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IBooksRepository, BooksRepository>();
             services.AddScoped<IRentBookRepository, RentBookRepository>();
+            services.AddScoped<ILibrariesRepository, LibrariesRepository>();
             services.AddScoped<IBooksService, BooksService>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IBackgroundsService, BackgroundsService>();
@@ -55,6 +65,7 @@ namespace Lesson1
             services.AddScoped<ILibrariesService, LibrariesService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRentBookService, RentBookService>();
+            services.AddScoped<ITokenGenerator, TokenGenerator>();
 
             services.AddDbContext<EFCoreDbContext>(options =>
                options.UseSqlServer(Configuration["ConnectionStrings:Default"], b => b.MigrationsAssembly("Lesson1_DAL")));
