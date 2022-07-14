@@ -8,8 +8,6 @@ namespace Lesson1_BL.Services.UsersService
 {
     public interface IUsersService
     {
-        Task<bool> RentABook(Guid bookId, Guid clientId);
-        Task<bool> ReturnABook(Guid bookId, Guid clientId, bool isLost, bool isDamaged);
         Task<IEnumerable<User>> GetAllClients();
         Task<User> GetByIdClient(Guid id);
         Task<bool> DeleteByIdClient(Guid id);

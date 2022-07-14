@@ -17,7 +17,7 @@ namespace Lesson1_DAL.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<(Book, IEnumerable<BookRevision>)> GetFullInfo(Guid id)
+        public async Task<(Book book, IEnumerable<BookRevision> bookRevisions)> GetFullInfo(Guid id)
         {
             var result = await _dbContext.BookRevisions.Include(c => c.Book).Where(c => c.BookId == id).ToListAsync();
 

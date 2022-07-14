@@ -15,5 +15,6 @@ namespace Lesson1_DAL.Interfaces
         Task<bool> Update(T item);
         Task<Guid> Add(T item);
         Task<T> GetByPredicate(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> GetAllByPredicate(Expression<Func<T, bool>> predicate);
     }
 }

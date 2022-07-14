@@ -87,7 +87,7 @@ namespace Lesson1.Controllers
         }
 
         [HttpGet("full/{id}")]
-        public async Task<BookDto> GetFullBookInfo(Guid id)
+        public async Task<BookWithRevisionsDto> GetFullBookInfo(Guid id)
         {
             return await _booksService.GetBookFullInfo(id);
         }

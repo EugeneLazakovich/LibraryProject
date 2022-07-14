@@ -2,6 +2,7 @@ using Lesson1_BL;
 using Lesson1_BL.Auth;
 using Lesson1_BL.Services.AuthService;
 using Lesson1_BL.Services.BooksService;
+using Lesson1_BL.Services.RentBookService;
 using Lesson1_BL.Services.UsersService;
 using Lesson1_DAL;
 using Lesson1_DAL.Interfaces;
@@ -46,12 +47,14 @@ namespace Lesson1
                     });
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IBooksRepository, BooksRepository>();
+            services.AddScoped<IRentBookRepository, RentBookRepository>();
             services.AddScoped<IBooksService, BooksService>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IBackgroundsService, BackgroundsService>();
             services.AddScoped<ICitiesService, CitiesService>();
             services.AddScoped<ILibrariesService, LibrariesService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IRentBookService, RentBookService>();
 
             services.AddDbContext<EFCoreDbContext>(options =>
                options.UseSqlServer(Configuration["ConnectionStrings:Default"], b => b.MigrationsAssembly("Lesson1_DAL")));
