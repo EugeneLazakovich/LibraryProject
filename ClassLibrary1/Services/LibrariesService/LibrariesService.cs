@@ -10,25 +10,23 @@ namespace Lesson1_BL.Services.LibrariesService
 {
     public class LibrariesService : ILibrariesService
     {
-        private readonly IGenericRepository<Library> _genericLibrariesRepository;
         private readonly ILibrariesRepository _librariesRepository;
-        public LibrariesService(IGenericRepository<Library> genericLibrariesRepository, ILibrariesRepository librariesRepository)
+        public LibrariesService(ILibrariesRepository librariesRepository)
         {
-            _genericLibrariesRepository = genericLibrariesRepository;
             _librariesRepository = librariesRepository;
         }
         public async Task<IEnumerable<NearestLibraryDto>> GetNearestLibraries(Location location, int top = 10)
         {
-            var libraries = await _librariesRepository
-                .GetNearestLibraries(location, top);
-                //.Select(l => new Tuple<Library, double> { l, CalculateDistance(l, location) });
-            var tupleList = new List<Tuple<Library, double>>();
-            foreach(var library in libraries)
-            {
-                tupleList.Add(new Tuple<Library, double>(library, CalculateDistance(library, location)));
-            }
-
-            return MapFromTupleToNearestLibraryDto(tupleList);
+            return (await _librariesRepository
+                .GetNearestLibraries(location, top))
+                .Select(l => new NearestLibraryDto
+                {
+                    XCoordinate = l.Location.XCoordinate,
+                    YCoordinate = l.Location.YCoordinate,
+                    CityName = l.City.Name,
+                    FullAddress = l.FullAddress,
+                    Distance = CalculateDistance(l, location)
+                });
         }
 
         private double CalculateDistance(Library library, Location userLocation)
@@ -53,18 +51,6 @@ namespace Lesson1_BL.Services.LibrariesService
         private double ConvertToRadians(float angle)
         {
             return (Math.PI / 180) * angle;
-        }
-
-        private IEnumerable<NearestLibraryDto> MapFromTupleToNearestLibraryDto(List<Tuple<Library, double>> result)
-        {
-            return result.Select(c => new NearestLibraryDto
-            {
-                XCoordinate = c.Item1.Location.XCoordinate,
-                YCoordinate = c.Item1.Location.YCoordinate,
-                CityName = c.Item1.City.Name,
-                FullAddress = c.Item1.FullAddress,
-                Distance = c.Item2
-            });
         }
     }
 }

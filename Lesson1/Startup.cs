@@ -3,6 +3,7 @@ using Lesson1_BL.Auth;
 using Lesson1_BL.Options;
 using Lesson1_BL.Services.AuthService;
 using Lesson1_BL.Services.BooksService;
+using Lesson1_BL.Services.HashService;
 using Lesson1_BL.Services.LibrariesService;
 using Lesson1_BL.Services.RentBookService;
 using Lesson1_BL.Services.UsersService;
@@ -33,9 +34,12 @@ namespace Lesson1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Key));
+            services.AddHttpContextAccessor();
+
             services.Configure<AuthOptions>(options =>
                 Configuration.GetSection(nameof(AuthOptions)).Bind(options));
+            services.Configure<HashOptions>(options =>
+                Configuration.GetSection(nameof(HashOptions)).Bind(options));
 
             var authOptions = Configuration.GetSection(nameof(AuthOptions)).Get<AuthOptions>();
 
@@ -65,6 +69,7 @@ namespace Lesson1
             services.AddScoped<ILibrariesService, LibrariesService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRentBookService, RentBookService>();
+            services.AddScoped<IHashService, HashService>();
             services.AddScoped<ITokenGenerator, TokenGenerator>();
 
             services.AddDbContext<EFCoreDbContext>(options =>

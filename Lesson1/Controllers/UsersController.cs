@@ -1,4 +1,5 @@
-﻿using Lesson1_BL.Services.AuthService;
+﻿using Lesson1_BL.DTOs;
+using Lesson1_BL.Services.AuthService;
 using Lesson1_BL.Services.UsersService;
 using Lesson1_DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -34,21 +35,6 @@ namespace Lesson1.Controllers
         public async Task<User> GetById(Guid id)
         {
             return await _clientsService.GetByIdClient(id);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Add(User client)
-        {
-            try
-            {
-                var result = await _clientsService.AddClient(client);
-
-                return Created(result.ToString(), client);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
         [HttpPut("{id}")]
@@ -101,6 +87,12 @@ namespace Lesson1.Controllers
             }
 
             return !String.IsNullOrEmpty(token) ? Ok(token) : Unauthorized();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignUp(UserDto userDto)
+        {
+            return Ok(await _authService.SignUp(userDto));
         }
     }
 }
