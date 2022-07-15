@@ -7,6 +7,6 @@ namespace Lesson1_DAL.Interfaces
 {
     public interface IRentBookRepository
     {
-        Task<(Book book, BookRevision bookRevision, IEnumerable<LibraryBooks> libraryBooks)> GetFullInfo(Guid bookId);
+        Task<(Book book, BookRevision bookRevision, LibraryBooks libraryBook)> GetFullInfo(Guid bookId, Guid libraryId);
     }
 }
