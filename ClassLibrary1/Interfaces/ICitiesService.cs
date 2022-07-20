@@ -1,5 +1,4 @@
-﻿using Lesson1_DAL;
-using Lesson1_DAL.Models;
+﻿using Lesson1_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

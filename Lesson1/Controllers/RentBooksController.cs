@@ -1,12 +1,9 @@
 ﻿using Lesson1_BL;
 using Lesson1_BL.Services.RentBookService;
-using Lesson1_DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lesson1.Controllers
@@ -24,62 +21,13 @@ namespace Lesson1.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<RentBook>> GetAll()
-        {
-            return await _rentBookService.GetAllRentBooks();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<RentBook> GetById(Guid id)
-        {
-            return await _rentBookService.GetByIdRentBook(id);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Add(RentBook rentBook)
-        {
-            try
-            {
-                var result = await _rentBookService.AddRentBook(rentBook);
-
-                return Created(result.ToString(), rentBook);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, RentBook rentBook)
-        {
-            try
-            {
-                rentBook.Id = id;
-                var result = await _rentBookService.UpdateRentBook(rentBook);
-
-                return Ok();
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<bool> Delete(Guid id)
-        {
-            return await _rentBookService.DeleteByIdRentBook(id);
-        }
-
         [Authorize(Roles = Roles.Reader)]
         [HttpPut("rent")]
-        public async Task<IActionResult> RentABook(Location location, Guid bookId, Guid clientId, int top)
+        public async Task<IActionResult> RentABook(Guid bookId, Guid clientId, Guid libraryId)
         {
             try
             {
-                var result = await _rentBookService.RentABook(location, bookId, clientId, top);
+                var result = await _rentBookService.RentABook(bookId, clientId, libraryId);
 
                 return Ok();
             }

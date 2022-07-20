@@ -62,6 +62,7 @@ namespace Lesson1_DAL.Repositories
         public async Task<IEnumerable<T>> GetAllByPredicate(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
-        }
+        }       
+        
     }
 }

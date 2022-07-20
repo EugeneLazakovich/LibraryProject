@@ -1,10 +1,9 @@
-﻿using Lesson1_BL.DTOs;
+﻿using Lesson1_BL.Services.LibrariesService;
 using Lesson1_DAL;
 using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lesson1_BL.Services.UsersService
