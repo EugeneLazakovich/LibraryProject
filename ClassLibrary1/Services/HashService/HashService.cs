@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Lesson1_BL.Services.HashService
 {

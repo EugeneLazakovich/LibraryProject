@@ -3,9 +3,11 @@ using Lesson1_BL.Auth;
 using Lesson1_BL.Options;
 using Lesson1_BL.Services.AuthService;
 using Lesson1_BL.Services.BooksService;
+using Lesson1_BL.Services.EncryptionService;
 using Lesson1_BL.Services.HashService;
 using Lesson1_BL.Services.LibrariesService;
 using Lesson1_BL.Services.RentBookService;
+using Lesson1_BL.Services.SMTPService;
 using Lesson1_BL.Services.UsersService;
 using Lesson1_DAL;
 using Lesson1_DAL.Interfaces;
@@ -19,10 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using System.Text;
 
 namespace Lesson1
@@ -45,6 +44,10 @@ namespace Lesson1
                 Configuration.GetSection(nameof(AuthOptions)).Bind(options));
             services.Configure<HashOptions>(options =>
                 Configuration.GetSection(nameof(HashOptions)).Bind(options));
+            services.Configure<SmtpConfiguration>(options =>
+                Configuration.GetSection(nameof(SmtpConfiguration)).Bind(options));
+            services.Configure<EncryptionConfiguration>(options =>
+                Configuration.GetSection(nameof(EncryptionConfiguration)).Bind(options));
 
             var authOptions = Configuration.GetSection(nameof(AuthOptions)).Get<AuthOptions>();
 
@@ -76,23 +79,13 @@ namespace Lesson1
             services.AddScoped<IRentBookService, RentBookService>();
             services.AddScoped<IHashService, HashService>();
             services.AddScoped<ITokenGenerator, TokenGenerator>();
+            services.AddScoped<ISendingBlueSmtpService, SendingBlueSmtpService>();
+            services.AddScoped<IEncryptionService, EncryptionService>();
 
             services.AddDbContext<EFCoreDbContext>(options =>
                options.UseSqlServer(Configuration["ConnectionStrings:Default"], b => b.MigrationsAssembly("Lesson1_DAL")));
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
-            /*services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Lesson1", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-            });*/
 
             services.AddSwaggerGen(c =>
             {
@@ -104,25 +97,24 @@ namespace Lesson1
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer"
                 });
-
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                  {
+                {
                     {
-                      new OpenApiSecurityScheme
-                      {
-                        Reference = new OpenApiReference
-                          {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                          },
-                          Scheme = "oauth2",
-                          Name = "Bearer",
-                          In = ParameterLocation.Header,
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
 
                         },
                         new List<string>()
-                      }
-                    });
+                    }
+                });
             });
 
             services.AddControllers();

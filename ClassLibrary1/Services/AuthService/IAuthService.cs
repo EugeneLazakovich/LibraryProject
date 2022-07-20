@@ -8,5 +8,6 @@ namespace Lesson1_BL.Services.AuthService
     {
         Task<string> SignIn(string login, string password);
         Task<Guid> SignUp(UserDto user);
+        Task<bool> ConfirmUserMail(string encryptedEmail);
     }
 }

@@ -92,7 +92,21 @@ namespace Lesson1.Controllers
         [HttpPost]
         public async Task<IActionResult> SignUp(UserDto userDto)
         {
-            return Ok(await _authService.SignUp(userDto));
+            try
+            {
+                var id = await _authService.SignUp(userDto);
+                return Ok(id);
+            }
+            catch(ArgumentException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+        }
+
+        [HttpGet("confirm")]
+        public async Task<IActionResult> ConfirmUserEmail(string email)
+        {
+            return Ok(await _authService.ConfirmUserMail(email));
         }
     }
 }
