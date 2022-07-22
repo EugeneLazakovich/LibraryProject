@@ -6,7 +6,6 @@ using Lesson1_BL.Services.SMTPService;
 using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Models;
 using System;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Lesson1_BL.Services.AuthService
@@ -37,8 +36,9 @@ namespace Lesson1_BL.Services.AuthService
 
         public async Task<string> SignIn(string login, string password)
         {
+            var hashed = _hashService.HashString(password);
             var user = await _genericClientRepository
-                .GetByPredicate(c => c.Email == login && c.Password == _hashService.HashString(password));
+                .GetByPredicate(c => c.Email == login && c.Password == hashed);
 
             if (user == null)
             {
@@ -56,10 +56,6 @@ namespace Lesson1_BL.Services.AuthService
             {
                 throw new ArgumentException("User with this email has already been created!");
             }
-            if (!IsCorrectEmail(user.Email))
-            {
-                throw new ArgumentException("Email is not correct!");
-            }
             user.Password = _hashService.HashString(user.Password);
 
             var response = await _genericClientRepository.Add(MapUserDtoToUser(user));
@@ -68,7 +64,7 @@ namespace Lesson1_BL.Services.AuthService
                 {
                     ClientName = $"{user.FirstName} {user.LastName}",
                     Email = user.Email,
-                    Subject = "Email confiramtion",
+                    Subject = "Email confirmation",
                     Body = "https://localhost:5001/users/confirm?email=" + GenerateConfirmationString(user.Email)
                 });
 
@@ -87,15 +83,6 @@ namespace Lesson1_BL.Services.AuthService
             }
 
             return user != null;
-        }
-
-        private bool IsCorrectEmail(string email)
-        {
-            string pattern = @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))"
-                +
-                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$";
-
-            return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase);
         }
 
         private string GenerateConfirmationString(string email)
