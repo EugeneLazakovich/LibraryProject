@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClassLibrary1\Lesson1_BL.csproj" />
+    <ProjectReference Include="..\Lesson1_Core\Lesson1_Core.csproj" />
   </ItemGroup>
 
 

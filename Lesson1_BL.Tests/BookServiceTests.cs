@@ -16,7 +16,7 @@ namespace Lesson1_BL.Tests
         private Mock<IGenericRepository<Book>> _genericBookRepositoryMock;
         private Mock<IBooksRepository> _booksRepository;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Setup()
         {
             _fixture = new Fixture();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Lesson1_DAL.Models;
+using Lesson1_DAL.Migrations;
 
 namespace Lesson1_DAL
 {
@@ -26,7 +27,7 @@ namespace Lesson1_DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.Seed();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
