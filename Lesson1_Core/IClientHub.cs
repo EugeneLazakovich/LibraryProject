@@ -5,5 +5,6 @@ namespace Lesson1_Core
     public interface IClientHub
     {
         Task ReceiveMessage(string user, string message);
+        Task ReceiveSystemMessage(string message);
     }
 }

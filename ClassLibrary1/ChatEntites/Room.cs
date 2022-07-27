@@ -2,7 +2,7 @@
 {
     public class Room
     {
-        public string ReaderConnectionId { get; set; }
-        public string LibrarianConnectionId { get; set; }
+        public ConnectionUser Reader { get; set; }
+        public ConnectionUser Librarian { get; set; }
     }
 }

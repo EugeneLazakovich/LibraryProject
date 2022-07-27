@@ -17,8 +17,8 @@ namespace Lesson1_BL
         private readonly IAuthService _authService;
         private readonly ITokenGenerator _tokenGenerator;
 
-        private Func<Room, bool> ByReader = x => string.IsNullOrEmpty(x.ReaderConnectionId);
-        private Func<Room, bool> ByLibrarian = x => string.IsNullOrEmpty(x.LibrarianConnectionId);
+        private Func<Room, bool> ByReader = x => x.Reader == null;
+        private Func<Room, bool> ByLibrarian = x => x.Librarian == null;
 
         static ChatHub()
         {
@@ -31,31 +31,49 @@ namespace Lesson1_BL
         {
             _authService = authService;
             _tokenGenerator = tokenGenerator;
-        }
-
-        public override async Task OnConnectedAsync()
-        {
-            await Clients.Others.ReceiveMessage(Context.ConnectionId, " has been connected!");
-        }
+        }       
 
         public override async Task OnDisconnectedAsync(Exception exception)
-        {
-            await Clients.Others.ReceiveMessage(Context.ConnectionId, " has been disconnected!");
+        {            
+            var room = GetRoom(Context.ConnectionId);
+            if (room != null)
+            {
+                var role = room.Librarian != null && room.Librarian.ConnectionId == Context.ConnectionId
+                    ? Roles.Librarian : Roles.Reader;
+                var targetId = room.Reader != null && room.Reader.ConnectionId == Context.ConnectionId
+                    ? (room.Librarian != null ? room.Librarian.ConnectionId : string.Empty)
+                    : (room.Reader != null ? room.Reader.ConnectionId : string.Empty);
+                var name = role == Roles.Librarian ? room.Librarian.Name : room.Reader.Name;
+                await Clients.Client(targetId).ReceiveMessage(name, "has been disconnected!");
+                if (role == Roles.Reader)
+                {
+                    room.Reader = null;
+                }
+                else if(role == Roles.Librarian)
+                {
+                    room.Librarian = null;
+                }
+                if(room.Librarian == null
+                    && room.Reader == null)
+                {
+                    _chatRooms.Remove(room);
+                }
+            }
         }
 
         public async Task SendMessage(string message)
         {
-            var room = _chatRooms.FirstOrDefault(x =>
-                x.LibrarianConnectionId == Context.ConnectionId
-                || x.ReaderConnectionId == Context.ConnectionId);
-            if(room != null)
+            var room = GetRoom(Context.ConnectionId);
+            if (room != null
+                && room.Reader != null
+                && room.Librarian != null)
             {
-                var role = room.ReaderConnectionId == Context.ConnectionId
-                    ? Roles.Reader : Roles.Librarian;
-                var targetId = room.ReaderConnectionId == Context.ConnectionId
-                    ? room.LibrarianConnectionId : room.ReaderConnectionId;
+                var name = room.Reader.ConnectionId == Context.ConnectionId
+                    ? room.Reader.Name : room.Librarian.Name;
+                var targetId = room.Reader.ConnectionId == Context.ConnectionId
+                    ? room.Librarian.ConnectionId : room.Reader.ConnectionId;
 
-                await Clients.Client(targetId).ReceiveMessage(role, message);
+                await Clients.Client(targetId).ReceiveMessage(name, message);
             }            
         }
 
@@ -71,6 +89,9 @@ namespace Lesson1_BL
                 var role = _tokenGenerator.GetClaimValueFromToken(
                     token,
                     ClaimsIdentity.DefaultRoleClaimType.ToString());
+                var name = _tokenGenerator.GetClaimValueFromToken(
+                    token,
+                    ClaimsIdentity.DefaultNameClaimType.ToString());
                 var predicate = role == Roles.Reader ? ByReader : ByLibrarian;
                 var room = _chatRooms.FirstOrDefault(predicate);
                 if(room == null)
@@ -80,31 +101,51 @@ namespace Lesson1_BL
                 }
                 if (role == Roles.Reader)
                 {
-                    room.ReaderConnectionId = Context.ConnectionId;
+                    room.Reader = new ConnectionUser
+                    {
+                        ConnectionId = Context.ConnectionId,
+                        Name = name
+                    };
+                    
                 }
                 else if (role == Roles.Librarian)
                 {
-                    room.LibrarianConnectionId = Context.ConnectionId;
+                    room.Librarian = new ConnectionUser
+                    {
+                        ConnectionId = Context.ConnectionId,
+                        Name = name
+                    };
                 }
-                if(!string.IsNullOrEmpty(room.LibrarianConnectionId) 
-                    && !string.IsNullOrEmpty(room.ReaderConnectionId))
+                if(room.Librarian != null
+                    && room.Reader != null)
                 {
-                    await Clients.Clients(new List<string> { room.ReaderConnectionId, room.LibrarianConnectionId })
-                        .ReceiveMessage("SYSTEM", "You're added to chat room!");
+                    await Clients.Clients(new List<string> { room.Reader.ConnectionId, room.Librarian.ConnectionId })
+                        .ReceiveSystemMessage("You're added to chat room!");
+                    await Clients.Client(room.Reader.ConnectionId)
+                        .ReceiveSystemMessage("You're speaking with " + room.Librarian.Name);
+                    await Clients.Client(room.Librarian.ConnectionId)
+                        .ReceiveSystemMessage("You're speaking with " + room.Reader.Name);
                 }
                 else
                 {
-                    await Clients.Clients(new List<string> { room.ReaderConnectionId, room.LibrarianConnectionId })
-                        .ReceiveMessage("SYSTEM", "You're added to waiting list");
+                    var connectionId = role == Roles.Reader
+                        ? room.Reader.ConnectionId : room.Librarian.ConnectionId;
+                    await Clients.Client(connectionId)
+                        .ReceiveSystemMessage("You're added to waiting list");
                 }
-                //TODO add notification about room filling (if yes)
-                //TODO send message only to uuser in your room
                 return true;
             }
             catch
             {
                 return false;
-            }
+            }            
+        }
+
+        private Room GetRoom(string connectionId)
+        {
+            return _chatRooms.FirstOrDefault(x =>
+                (x.Librarian != null && x.Librarian.ConnectionId == connectionId)
+                || (x.Reader != null && x.Reader.ConnectionId == connectionId));
         }
     }
 }
