@@ -26,7 +26,7 @@ namespace Lesson1_BL.Tests
         private AuthService _authService;
         private Fixture _fixture;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUp()
         {
             _genericUserRepositoryMock = new Mock<IGenericRepository<User>>();

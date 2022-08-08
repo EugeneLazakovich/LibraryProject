@@ -3,5 +3,6 @@
     public interface ITokenGenerator
     {
         public string GenerateToken(string username, string role);
+        string GetClaimValueFromToken(string jwtToken, string claimsTypeToGet);
     }
 }
