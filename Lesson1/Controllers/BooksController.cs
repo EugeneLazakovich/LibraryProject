@@ -24,7 +24,7 @@ namespace Lesson1.Controllers
             _logger = logger;
         }
 
-        [Authorize(Roles = Roles.Reader)]
+        //[Authorize(Roles = Roles.Reader)]
         [HttpGet]
         public async Task<IEnumerable<Book>> GetAll()
         {

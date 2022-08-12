@@ -10,6 +10,7 @@ using Lesson1_BL.Services.RentBookService;
 using Lesson1_BL.Services.SMTPService;
 using Lesson1_BL.Services.UsersService;
 using Lesson1_DAL;
+using Lesson1_DAL.CachingSystem;
 using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System.Collections.Generic;
 using System.Text;
 
@@ -40,8 +42,19 @@ namespace Lesson1
         {
             services.AddHttpContextAccessor();
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    });
+            });
+
             services.Configure<AuthOptions>(options =>
                 Configuration.GetSection(nameof(AuthOptions)).Bind(options));
+            services.Configure<RedisOptions>(options =>
+                Configuration.GetSection(nameof(RedisOptions)).Bind(options));
             services.Configure<HashOptions>(options =>
                 Configuration.GetSection(nameof(HashOptions)).Bind(options));
             services.Configure<SmtpConfiguration>(options =>
@@ -49,7 +62,19 @@ namespace Lesson1
             services.Configure<EncryptionConfiguration>(options =>
                 Configuration.GetSection(nameof(EncryptionConfiguration)).Bind(options));
 
-            var authOptions = Configuration.GetSection(nameof(AuthOptions)).Get<AuthOptions>();
+            var redisOptions = Configuration.GetSection(nameof(RedisOptions)).Get<RedisOptions>();
+
+            services.AddSingleton<IConnectionMultiplexer>(serviceProvider =>
+                  ConnectionMultiplexer.Connect(new ConfigurationOptions
+                  {
+                      EndPoints =
+                      {
+                          redisOptions.DefaultConnection
+                      },
+                      AbortOnConnectFail = false,
+                  }));
+
+            var authOptions = Configuration.GetSection(nameof(AuthOptions)).Get<AuthOptions>();           
 
             services.AddSignalR();
 
@@ -78,6 +103,7 @@ namespace Lesson1
             services.AddScoped<ICitiesService, CitiesService>();
             services.AddScoped<ILibrariesService, LibrariesService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICacheRepository, RedisCachingRepository>();
             services.AddScoped<IRentBookService, RentBookService>();
             services.AddScoped<IHashService, HashService>();
             services.AddScoped<ITokenGenerator, TokenGenerator>();
@@ -135,6 +161,7 @@ namespace Lesson1
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();

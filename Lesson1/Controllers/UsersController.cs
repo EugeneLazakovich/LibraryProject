@@ -89,7 +89,7 @@ namespace Lesson1.Controllers
             return !String.IsNullOrEmpty(token) ? Ok(token) : Unauthorized();
         }
 
-        [HttpPost]
+        [HttpPost("signup")]
         public async Task<IActionResult> SignUp(UserDto userDto)
         {
             try
