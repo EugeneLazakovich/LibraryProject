@@ -3,6 +3,7 @@ using Lesson1_BL.DTOs;
 using Lesson1_BL.Services.EncryptionService;
 using Lesson1_BL.Services.HashService;
 using Lesson1_BL.Services.SMTPService;
+using Lesson1_DAL.CachingSystem;
 using Lesson1_DAL.Interfaces;
 using Lesson1_DAL.Models;
 using System;
@@ -18,13 +19,15 @@ namespace Lesson1_BL.Services.AuthService
         private readonly IHashService _hashService;
         private readonly ISendingBlueSmtpService _sendingBlueSmtpService;
         private readonly IEncryptionService _encryptionService;
+        private readonly ICacheRepository _cacheRepository;
         public AuthService(
             IEncryptionService encryptionService,
             IGenericRepository<User> genericClientRepository, 
             IGenericRepository<Role> genericRoleRepository,
             ITokenGenerator tokenGenerator,
             IHashService hashService,
-            ISendingBlueSmtpService sendingBlueSmtpService)
+            ISendingBlueSmtpService sendingBlueSmtpService,
+            ICacheRepository cacheRepository)
         {
             _encryptionService = encryptionService;
             _genericClientRepository = genericClientRepository;
@@ -32,6 +35,7 @@ namespace Lesson1_BL.Services.AuthService
             _tokenGenerator = tokenGenerator;
             _hashService = hashService;
             _sendingBlueSmtpService = sendingBlueSmtpService;
+            _cacheRepository = cacheRepository;
         }
 
         public async Task<string> SignIn(string login, string password)
@@ -44,10 +48,11 @@ namespace Lesson1_BL.Services.AuthService
             {
                 throw new ArgumentException();
             }
-            var role = user.RoleId.HasValue ? (await _genericRoleRepository.GetById(user.RoleId.Value)).Name : Roles.Reader;
+
+            var role = user.RoleId.HasValue ? (await GetRole(user.RoleId.Value)) : Roles.Reader;
 
             return _tokenGenerator.GenerateToken(user.Email, role);
-        }
+        }        
 
         public async Task<Guid> SignUp(UserDto user)
         {
@@ -85,6 +90,16 @@ namespace Lesson1_BL.Services.AuthService
             return user != null;
         }
 
+        private async Task<string> GetRole(Guid roleId)
+        {
+            var cachedRole = await _cacheRepository.GetAsync(roleId.ToString());
+            if (string.IsNullOrEmpty(cachedRole))
+            {
+                cachedRole = (await _genericRoleRepository.GetById(roleId)).Name;
+                await _cacheRepository.SaveAsync(roleId.ToString(), cachedRole);
+            }
+            return cachedRole;
+        }
         private string GenerateConfirmationString(string email)
         {
             return _encryptionService.EncryptString(email);
